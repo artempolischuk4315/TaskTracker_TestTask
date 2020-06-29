@@ -35,52 +35,63 @@ public class TaskController {
     public ResponseEntity<List<TaskDto>> readAllSortedByUser(
                     @RequestParam(name = "order", defaultValue = "asc") String order){
 
-        return !orderParamValid(order) ?
-                getResponseWithBadRequestStatus() :
-                    ResponseEntity.status(HttpStatus.OK).body(taskFacade.findSortedByUser(order));
+        if(!isOrderParamValid(order)){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(taskFacade.findSortedByUser(order));
     }
 
     @GetMapping("/list/filter")
     public ResponseEntity<List<TaskDto>> readAllFilteredByStatus(
             @RequestParam(name = "status", defaultValue = "view") String status){
 
-        return !TaskStatus.contains(status.toUpperCase()) ?
-                getResponseWithBadRequestStatus() :
-                    getFilteredTasksList(status);
+        if(!TaskStatus.contains(status.toUpperCase())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(taskFacade.findFilteredByStatus(TaskStatus.valueOf(status.toUpperCase())));
     }
 
     @PostMapping("")
-    public ResponseEntity<Object> create(
-            @Valid @RequestBody TaskDto taskDto, BindingResult bindingResult, Principal principal){
+    public ResponseEntity<Object> create(@Valid @RequestBody TaskDto taskDto,
+                                         BindingResult bindingResult, Principal principal){
 
-        return bindingResult.hasErrors() ?
-                getResponseWithErrors(bindingResult) :
-                    ResponseEntity.status(HttpStatus.OK).body(taskFacade.save(taskDto, principal));
+        if(bindingResult.hasErrors()){
+            return getResponseWithErrors(bindingResult);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(taskFacade.save(taskDto, principal));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> update(@PathVariable Integer id,
-                                         @Valid @RequestBody TaskFieldsToEdit editTaskDto, BindingResult bindingResult){
+                                         @Valid @RequestBody TaskFieldsToEdit editTaskDto,
+                                         BindingResult bindingResult){
 
-        return bindingResult.hasErrors() ?
-                 getResponseWithErrors(bindingResult) :
-                      ResponseEntity.status(HttpStatus.OK).body(taskFacade.edit(id, editTaskDto));
+        if(bindingResult.hasErrors()){
+            return getResponseWithErrors(bindingResult);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(taskFacade.edit(id, editTaskDto));
     }
 
     @PutMapping("/{id}/status/change")
     public ResponseEntity<Object> changeStatus(@PathVariable Integer id,
                                                @RequestParam(name = "new-status", defaultValue = "view") String status){
 
-        return !TaskStatus.contains(status.toUpperCase()) ?
-                getResponseWithBadRequestStatus(WRONG_STATUS) :
-                    ResponseEntity.status(HttpStatus.OK).
-                        body(taskFacade.changeStatus(id, TaskStatus.valueOf(status.toUpperCase())));
+        if(!TaskStatus.contains(status.toUpperCase())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(WRONG_STATUS);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(taskFacade.changeStatus(id, TaskStatus.valueOf(status.toUpperCase())));
     }
 
     @PutMapping("/{task-id}/users/{user-id}")
     public ResponseEntity<Object> changeUser(
             @PathVariable(name = "task-id") Integer taskId, @PathVariable(name = "user-id") Integer userId){
-
         return ResponseEntity.status(HttpStatus.OK)
                 .body(taskFacade.changeUser(taskId, userId));
     }
@@ -98,21 +109,7 @@ public class TaskController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
-    private ResponseEntity<List<TaskDto>> getFilteredTasksList(String status) {
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(taskFacade.findFilteredByStatus(TaskStatus.valueOf(status.toUpperCase())));
-    }
-
-    private ResponseEntity<Object> getResponseWithBadRequestStatus(String message) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
-    }
-
-    private ResponseEntity<List<TaskDto>> getResponseWithBadRequestStatus() {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
-
-    private boolean orderParamValid(String order) {
+    private boolean isOrderParamValid(String order) {
         return order.equals("asc") || order.equals("desc");
     }
 

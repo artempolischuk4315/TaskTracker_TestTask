@@ -114,11 +114,6 @@
             <version>2.3.5.RELEASE</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-security-oauth2</artifactId>
-        </dependency>
-
     </dependencies>
 
 </project>

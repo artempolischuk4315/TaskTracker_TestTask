@@ -35,17 +35,14 @@ public class UserController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<Object> create(
-            @Valid @RequestBody UserDto userDto, BindingResult bindingResult){
+    public ResponseEntity<Object> create(@Valid @RequestBody UserDto userDto,
+                                         BindingResult bindingResult){
 
         if(bindingResult.hasErrors()){
-            Map<String, Object> errors = getAllErrorsList(bindingResult);
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+            return getResponseWithErrors(bindingResult);
         }
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(userFacade.save(userDto));
+        return ResponseEntity.status(HttpStatus.OK).body(userFacade.save(userDto));
     }
 
     @GetMapping("/list")
@@ -68,13 +65,11 @@ public class UserController {
                 BindingResult bindingResult, @PathVariable Integer id){
 
         if(bindingResult.hasErrors()){
-            Map<String, Object> body = getAllErrorsList(bindingResult);
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+            return getResponseWithErrors(bindingResult);
         }
 
         return Role.contains(fieldsToUpdate.getRole()) ?
-                updateAndGetOk(fieldsToUpdate, id) : getBadRequestAnswer();
+                updateAndGetOkResponse(fieldsToUpdate, id) : getBadRequestResponse();
     }
 
     @DeleteMapping("/{id}")
@@ -85,12 +80,20 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    private ResponseEntity<Object> updateAndGetOk(@RequestBody @Valid UserFieldsToUpdate fieldsToUpdate, @PathVariable Integer id) {
+    private ResponseEntity<Object> getResponseWithErrors(BindingResult bindingResult) {
+        Map<String, Object> errors = getAllErrorsList(bindingResult);
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    private ResponseEntity<Object> updateAndGetOkResponse(
+            @RequestBody @Valid UserFieldsToUpdate fieldsToUpdate, @PathVariable Integer id) {
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(userFacade.update(fieldsToUpdate, id));
     }
 
-    private ResponseEntity<Object> getBadRequestAnswer() {
+    private ResponseEntity<Object> getBadRequestResponse() {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST).body(WRONG_ROLE_TYPE);
     }

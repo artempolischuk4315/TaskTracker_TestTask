@@ -25,7 +25,9 @@ public class TaskFacade {
     private final EntityMapper<Task, TaskDto> mapper;
 
     @Autowired
-    public TaskFacade(TaskService taskService, UserService userService, EntityMapper<Task, TaskDto> mapper) {
+    public TaskFacade(TaskService taskService,
+                      UserService userService, EntityMapper<Task, TaskDto> mapper) {
+
         this.taskService = taskService;
         this.userService = userService;
         this.mapper = mapper;
@@ -45,7 +47,6 @@ public class TaskFacade {
 
     public TaskDto save(TaskDto taskDto, Principal principal){
         Task taskToCreate = mapper.mapDtoToEntity(taskDto);
-
         User taskOwnerUser = userService.findByEmail(principal.getName());
 
         return mapper.mapEntityToDto(taskService.save(taskToCreate, taskOwnerUser));
@@ -60,7 +61,6 @@ public class TaskFacade {
     }
 
     public TaskDto changeUser(Integer taskId, Integer userId){
-
         User userToSet = userService.findById(userId);
 
         return mapper.mapEntityToDto(taskService.changeUser(taskId, userToSet));

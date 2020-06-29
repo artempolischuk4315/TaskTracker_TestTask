@@ -1,0 +1,11 @@
+version: "3.2"
+
+services:
+  mysql:
+    container_name: db-container
+    image: artempolishchuk4315/tracker-db:0.0.1
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: "task_tracker"
+      MYSQL_ROOT_PASSWORD: "1"

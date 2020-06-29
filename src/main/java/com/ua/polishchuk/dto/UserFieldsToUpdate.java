@@ -13,6 +13,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Builder
 public class UserFieldsToUpdate {
+    //removed password and email because I`m sure it has to be separate functionality
 
     @NotBlank(message = "Empty first name")
     @Size(max = 50, message = "Too long first name")
@@ -24,6 +25,4 @@ public class UserFieldsToUpdate {
 
     @NotBlank(message = "Empty role")
     private String role;
-
-    //removed password and email because it should be separate functionality
 }
