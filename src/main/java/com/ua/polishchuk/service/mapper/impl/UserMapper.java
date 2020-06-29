@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper implements EntityMapper<User, UserDto> {
+
     @Override
     public UserDto mapEntityToDto(User entity) {
         return UserDto.builder()

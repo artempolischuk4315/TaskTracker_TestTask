@@ -44,8 +44,7 @@ public class UserDto implements UserDetails {
     }
 
     @Override
-    public String getUsername() { return email;
-    }
+    public String getUsername() { return email; }
 
     @Override
     public boolean isAccountNonExpired() {

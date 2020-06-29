@@ -33,12 +33,10 @@ public class UserFacade {
     }
 
     public UserDto save(UserDto userDto){
-
         return mapper.mapEntityToDto(userService.save(mapper.mapDtoToEntity(userDto)));
     }
 
     public UserDto update(UserFieldsToUpdate fieldsToUpdate, Integer id){
-
         return mapper.mapEntityToDto(userService.update(fieldsToUpdate, id));
     }
 

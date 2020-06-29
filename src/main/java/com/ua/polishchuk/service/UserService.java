@@ -51,7 +51,7 @@ public class UserService {
     public User save(User user){
         checkIfUserAlreadyRegistered(user);
 
-        user = prepareEntityForSaving(user);
+        prepareUserForSaving(user);
 
         return userRepository.save(user);
     }
@@ -78,15 +78,15 @@ public class UserService {
                 .stream()
                 .filter(task -> task.getUser().getId().equals(userId))
                 .forEach(t -> taskService.delete(t.getId()));
+
     }
 
-    private User prepareEntityForSaving(User userEntity) {
+    private void prepareUserForSaving(User userEntity) {
         userEntity.setPassword(encoder.encode(userEntity.getPassword()));
 
         if(userEntity.getRole()==null){
             userEntity.setRole(Role.ROLE_USER);
         }
-        return userEntity;
     }
 
     private User setParametersOfUpdatedUser(User userToUpdate, UserFieldsToUpdate fieldsToUpdate){
@@ -99,9 +99,11 @@ public class UserService {
 
     private User getUserIfExists(Integer userId) {
         Optional <User> user = userRepository.findById(userId);
+
         if(!user.isPresent()){
             throw new EntityNotFoundException(USER_NOT_PRESENT);
         }
+
         return user.get();
     }
 

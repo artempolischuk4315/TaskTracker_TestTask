@@ -34,7 +34,6 @@ public class TaskService {
     @Transactional
     public Task save(Task task, User taskOwnerUser){
         checkIfTaskAlreadyExists(task.getTitle());
-
         Task taskToSave = prepareTaskForSaving(task, taskOwnerUser);
 
         return taskRepository.save(taskToSave);
@@ -42,26 +41,26 @@ public class TaskService {
 
     @Transactional
     public Task edit(Integer taskId, TaskFieldsToEdit fieldsToEdit){
-        Task taskThatShouldBeEdited = getTaskIfExists(taskId);
+        Task taskToEdit = getTaskIfExists(taskId);
 
         checkIfNewTitleIsUniqueRelativeToOtherTasks(fieldsToEdit.getTitle(), taskId);
 
-        taskThatShouldBeEdited = setParametersForEditingTask(taskThatShouldBeEdited, fieldsToEdit);
+        setParametersForTaskToEdit(taskToEdit, fieldsToEdit);
 
-        return taskRepository.save(taskThatShouldBeEdited);
+        return taskRepository.save(taskToEdit);
     }
 
     @Transactional
     public Task changeStatus(Integer taskId, TaskStatus status){
         Task task = getTaskIfExists(taskId);
         task.setStatus(status);
+
         return taskRepository.save(task);
     }
 
     @Transactional
     public Task changeUser(Integer taskId, User userToSet){
         Task task = getTaskIfExists(taskId);
-
         task.setUser(userToSet);
 
         return taskRepository.save(task);
@@ -104,17 +103,17 @@ public class TaskService {
 
     private Task getTaskIfExists(Integer taskId) {
         Optional<Task> task = taskRepository.findById(taskId);
+
         if(!task.isPresent()){
             throw new EntityNotFoundException(TASK_NOT_EXISTS);
         }
+
         return task.get();
     }
 
-    private Task setParametersForEditingTask(Task task, TaskFieldsToEdit fieldsToEdit) {
+    private void setParametersForTaskToEdit(Task task, TaskFieldsToEdit fieldsToEdit) {
         task.setTitle(fieldsToEdit.getTitle());
         task.setDescription(fieldsToEdit.getDescription());
-
-        return task;
     }
 
     private Task prepareTaskForSaving(Task taskToSave, User taskOwnerUser){
@@ -123,6 +122,7 @@ public class TaskService {
         if(taskToSave.getStatus() == null){
             taskToSave.setStatus(TaskStatus.VIEW);
         }
+
         return taskToSave;
     }
 
