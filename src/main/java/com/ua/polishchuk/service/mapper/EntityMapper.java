@@ -1,4 +1,4 @@
-package com.ua.polishchuk.configuration.service.mapper;
+package com.ua.polishchuk.service.mapper;
 
 public interface EntityMapper <E, D> {
 

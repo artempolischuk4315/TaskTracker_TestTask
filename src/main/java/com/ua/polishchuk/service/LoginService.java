@@ -1,6 +1,6 @@
-package com.ua.polishchuk.configuration.service;
+package com.ua.polishchuk.service;
 
-import com.ua.polishchuk.configuration.service.mapper.EntityMapper;
+import com.ua.polishchuk.service.mapper.EntityMapper;
 import com.ua.polishchuk.dto.UserDto;
 import com.ua.polishchuk.entity.User;
 import com.ua.polishchuk.repository.UserRepository;

@@ -1,6 +1,6 @@
 package com.ua.polishchuk.configuration.security;
 
-import com.ua.polishchuk.configuration.service.LoginService;
+import com.ua.polishchuk.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

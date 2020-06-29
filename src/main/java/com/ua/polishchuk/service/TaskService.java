@@ -1,4 +1,4 @@
-package com.ua.polishchuk.configuration.service;
+package com.ua.polishchuk.service;
 
 import com.ua.polishchuk.dto.TaskFieldsToEdit;
 import com.ua.polishchuk.entity.Task;

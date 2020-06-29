@@ -1,4 +1,4 @@
-package com.ua.polishchuk.configuration.service.mapper.impl;
+package com.ua.polishchuk.service.mapper.impl;
 
 import com.ua.polishchuk.dto.TaskDto;
 import com.ua.polishchuk.entity.Task;
