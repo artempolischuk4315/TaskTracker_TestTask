@@ -127,13 +127,15 @@ class TaskServiceTest {
 
     @Test
     void findByStatusShouldReturnListOfTasksWithTheSameStatus(){
-        when(taskRepository.findAll()).thenReturn(taskList);
+        List<Task> expected = new ArrayList<>();
+        expected.add(taskList.get(0));
+        expected.add(taskList.get(1));
+
+        when(taskRepository.findByStatus(STATUS)).thenReturn(expected);
 
         List<Task> actual = systemUnderTest.findByStatus(TaskStatus.VIEW);
 
-        assertEquals(TaskStatus.VIEW, actual.get(0).getStatus());
-        assertEquals(TaskStatus.VIEW, actual.get(1).getStatus());
-        assertEquals(2, actual.size());
+        assertEquals(expected, actual);
     }
 
     @Test

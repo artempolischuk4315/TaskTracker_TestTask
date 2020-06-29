@@ -73,10 +73,7 @@ public class TaskService {
 
     public List<Task> findByStatus(TaskStatus status){
         return taskRepository
-                .findAll()
-                .stream()
-                .filter(task -> task.getStatus().equals(status))
-                .collect(Collectors.toList());
+                .findByStatus(status);
     }
 
     public List<Task> findSortedByUserFromOldToNew(){
